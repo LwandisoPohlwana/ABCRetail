@@ -9,5 +9,6 @@ namespace ABCRetail.ViewModel
         [Required]
         [Display(Name = "Product Image")]
         public IFormFile ImageFile { get; set; }
+        public string ImageUrl { get; set; }
     }
 }

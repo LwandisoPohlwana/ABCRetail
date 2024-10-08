@@ -1,0 +1,41 @@
+﻿@model List<ABCRetail.ViewModel.ShippingDetailViewModel>
+@{
+    ViewData["Title"] = "Your Shipping Details";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center">@ViewData["Title"]</h2>
+    <hr />
+    <div class="text-end mb-3">
+        <a asp-action="AddShippingDetail" class="btn btn-success">Add New Shipping Detail</a>
+    </div>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Address Line 1</th>
+                <th>Address Line 2</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Zip Code</th>
+                <th>Country</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var detail in Model)
+            {
+                <tr>
+                    <td>@detail.AddressLine1</td>
+                    <td>@detail.AddressLine2</td>
+                    <td>@detail.City</td>
+                    <td>@detail.State</td>
+                    <td>@detail.ZipCode</td>
+                    <td>@detail.Country</td>
+                    <td>
+                        <a asp-action="DeleteShippingDetail" asp-route-id="@detail.RowKey" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

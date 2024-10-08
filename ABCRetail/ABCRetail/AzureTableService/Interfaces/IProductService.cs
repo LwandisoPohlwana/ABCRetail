@@ -11,5 +11,6 @@ namespace ABCRetail.AzureTableService.Interfaces
         Task UpdateProductAsync(Product product);
         Task DeleteProductAsync(string rowKey);
         Task<string> GetNextProductRowKeyAsync();
+        Task UpdateStockLevelsAsync(IEnumerable<OrderItem> orderItems);
     }
 }

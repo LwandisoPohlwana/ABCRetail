@@ -4,6 +4,7 @@ using ABCRetail.Models;
 using ABCRetail.ViewModel;
 using Azure;
 using Azure.Data.Tables;
+using System.Net.Http;
 
 namespace ABCRetail.AzureTableService.ServiceClasses
 {
@@ -12,13 +13,15 @@ namespace ABCRetail.AzureTableService.ServiceClasses
         private readonly TableClient _tableClient;
         private readonly IBlobStorageService _blobStorageService;
         private readonly ILogger<ProductService> _logger;
+        private readonly HttpClient _httpClient;
 
-        public ProductService(TableServiceClient tableServiceClient, IBlobStorageService blobStorageService, ILogger<ProductService> logger)
+        public ProductService(TableServiceClient tableServiceClient, IBlobStorageService blobStorageService, ILogger<ProductService> logger, HttpClient httpClient)
         {
             _tableClient = tableServiceClient.GetTableClient("ProductTable");
             _tableClient.CreateIfNotExists();
             _blobStorageService = blobStorageService;
             _logger = logger;
+            _httpClient = httpClient;
         }
 
         public async Task<List<Product>> GetAllProductsAsync()
@@ -98,6 +101,30 @@ namespace ABCRetail.AzureTableService.ServiceClasses
             // Increment the numeric part of the last RowKey and return the new RowKey
             int nextId = int.Parse(lastProduct.RowKey.Substring(1)) + 1;
             return $"P{nextId}";
+        }
+
+        public async Task UpdateStockLevelsAsync(IEnumerable<OrderItem> orderItems)
+        {
+            foreach (var item in orderItems)
+            {
+                // Retrieve the product
+                var product = await GetProductByIdAsync(item.ProductId);
+
+                if (product != null)
+                {
+                    // Update stock level
+                    product.StockLevel -= item.Quantity;
+
+                    if (product.StockLevel < 0)
+                    {
+                        _logger.LogWarning("Product {ProductName} is out of stock. Attempted to reduce stock below zero.", product.ProductName);
+                        throw new InvalidOperationException($"Product {product.ProductName} is out of stock.");
+                    }
+
+                    // Update the product entity in Table Storage
+                    await UpdateProductAsync(product);
+                }
+            }
         }
 
     }

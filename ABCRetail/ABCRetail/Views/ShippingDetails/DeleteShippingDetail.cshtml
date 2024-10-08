@@ -1,0 +1,27 @@
+﻿@model ShippingDetail
+
+@{
+    ViewData["Title"] = "Delete Shipping Detail";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center text-danger">@ViewData["Title"]</h2>
+    <hr />
+    <div class="alert alert-danger">
+        <p>Are you sure you want to delete this shipping detail?</p>
+        <ul>
+            <li><strong>Address Line 1:</strong> @Model.AddressLine1</li>
+            <li><strong>City:</strong> @Model.City</li>
+            <li><strong>State:</strong> @Model.State</li>
+            <li><strong>Zip Code:</strong> @Model.ZipCode</li>
+            <li><strong>Country:</strong> @Model.Country</li>
+        </ul>
+    </div>
+    <div class="text-center">
+        <form asp-action="DeleteShippingDetailConfirmed" method="post">
+            <input type="hidden" asp-for="RowKey" />
+            <button type="submit" class="btn btn-danger">Delete</button>
+            <a asp-action="ViewShippingDetails" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>

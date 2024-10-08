@@ -33,18 +33,17 @@
         <span asp-validation-for="StockLevel" class="text-danger"></span>
     </div>
 
-    <!--<div class="form-group">
-        <label asp-for="I" class="control-label">Upload New Product Image (Optional)</label>
-        <input asp-for="ImageFile" class="form-control-file" type="file" />
-        <span asp-validation-for="ImageFile" class="text-danger"></span>
-        @if (!string.IsNullOrEmpty(Model.ImageUrl))
-        {
-            <div>
-                <img src="@Model.ImageUrl" alt="Product Image" class="img-thumbnail" style="width: 150px; height: 150px;" />
-                <p>Current Image</p>
-            </div>
-        }
-    </div>-->
+    <!-- Existing Image URL -->
+    <div class="form-group">
+        <label asp-for="ImageUrl" class="control-label"></label>
+        <input asp-for="ImageUrl" class="form-control" readonly />
+        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+    </div>
+
+    <!-- Link to Upload Image -->
+    <div class="form-group">
+        <a asp-action="UploadImage" asp-controller="Product" asp-route-id="@Model.Id" class="btn btn-primary mb-3">Edit Image</a>
+    </div>
 
     <button type="submit" class="btn btn-primary">Save</button>
     <a asp-action="Index" class="btn btn-secondary">Cancel</a>

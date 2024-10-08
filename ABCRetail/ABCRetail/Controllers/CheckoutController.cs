@@ -14,12 +14,14 @@ namespace ABCRetail.Controllers
     {
         private readonly ICustomerService _customerService;
         private readonly IOrderService _orderService;
+        private readonly IProductService _productService;
         private readonly ILogger<CheckoutController> _logger;
 
-        public CheckoutController(ICustomerService customerService, IOrderService orderService, ILogger<CheckoutController> logger)
+        public CheckoutController(ICustomerService customerService, IOrderService orderService, IProductService productService, ILogger<CheckoutController> logger)
         {
             _customerService = customerService;
             _orderService = orderService;
+            _productService = productService;
             _logger = logger;
         }
 
@@ -91,6 +93,9 @@ namespace ABCRetail.Controllers
 
                     // Save the order and order items to Azure Table Storage
                     await _orderService.SaveOrderAsync(order, orderItems);
+
+                    // Update stock levels ( Inventory Management )
+                    await _productService.UpdateStockLevelsAsync(orderItems);
 
                     // Clear the cart after order is processed
                     ClearCart();
